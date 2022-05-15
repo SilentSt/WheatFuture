@@ -9,7 +9,37 @@ namespace Wheat.Models.Responses
 {
     public class ContractsResult
     {
-        public IEnumerable<Dictionary<string, IEnumerable<Dictionary<int, SellContract>>>> MySellContracts { get; set; }
-        public IEnumerable<Dictionary<string, IEnumerable<Dictionary<int, SellContract>>>> MyAcquiredContracts { get; set; }
+        public double Balance => MySellContracts.Balance - MyBuyContracts.Balance;
+        public int Count => MySellContracts.Count + MyBuyContracts.Count;
+        
+        public Contracts MySellContracts { get; set; }
+        public Contracts MyBuyContracts { get; set; }
+    }
+
+    public class Contracts
+    {
+        public string SelfCode { get; set; }
+        public double Balance { get; set; }
+        public int Count { get; set; }
+        public List<PriceRow> PriceRow { get; set; }
+    }
+    
+    public class ContractPerson
+    {
+        public string Code { get; set; }
+        public List<ContractPrice> Prices { get; set; }
+    }
+
+    public class ContractPrice
+    {
+        public int Count { get; set; }
+        public SellContract Contract { get; set; }
+    }
+
+    public class PriceRow
+    {
+        public int Count { get; set; }
+        public string Code { get; set; }
+        public SellContract Contract { get; set; }
     }
 }

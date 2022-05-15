@@ -11,7 +11,7 @@ namespace Wheat.Models.Requests
         [Required]
         public string Password { get; set; }
         [Required]
-        [MaxLength(5)]
+        [StringLength(5)]
         public string Code { get; set; }
     }
 }

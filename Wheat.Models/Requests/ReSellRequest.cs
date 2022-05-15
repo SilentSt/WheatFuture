@@ -7,12 +7,15 @@ using System.Threading.Tasks;
 
 namespace Wheat.Models.Requests
 {
-    public class PostContractsRequest
+    public class ReSellRequest
     {
+        [Required]
+        public double OldPrice { get; set; }
+        [Required]
+        public double NewPrice { get; set; }
         [Required]
         public int Count { get; set; }
         [Required]
-        public double Price { get; set; }
-        public bool? Sell { get; set; }
+        public string Code { get; set; }
     }
 }

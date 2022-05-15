@@ -5,12 +5,11 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 
 using System.Text;
-
+using Wheat.Api.Models;
 using Wheat.Api.Service;
 using Wheat.DataLayer.DataBase;
 using Wheat.DataLayer.Repositories;
 using Wheat.DataLayer.Repositories.Interfaces;
-using Wheat.Models;
 using Wheat.Models.Entities;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -20,7 +19,11 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddAutoMapper(cfg => cfg.AddProfile<UserProfile>());
+builder.Services.AddAutoMapper(cfg =>
+{
+    cfg.AddProfile<UserProfile>();
+    cfg.AddProfile<OperationResultProfile>();
+});
 builder.Services.AddDbContext<WheatDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.Configure<JwtConfig>(builder.Configuration.GetSection("JwtConfig"));
@@ -57,6 +60,7 @@ builder.Services.Configure<KestrelServerOptions>(options =>
 });
 builder.Services.AddSwaggerGen(c =>
 {
+    c.EnableAnnotations();
     c.SwaggerDoc("v1", new OpenApiInfo
     {
         Title = "My API",
@@ -83,13 +87,13 @@ builder.Services.AddSwaggerGen(c =>
         }
     });
 });
-var mypolicy = "corspolice";
+
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy(name: mypolicy,
+    options.AddDefaultPolicy(
         policy =>
         {
-            policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
+            policy.WithOrigins("http://localhost:44575","http://127.0.0.1", "https://sbeu_exchange.shitposting.team/", "http://5.3.236.108:3000", "http://localhost:3000","http://localhost/:1").AllowAnyMethod().AllowAnyHeader().AllowCredentials();
         });
 });
 builder.Services.AddDefaultIdentity<WIdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
@@ -104,8 +108,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseCors(mypolicy);
-app.UseHttpsRedirection();
+app.UseCors();
 app.UseAuthorization();
 app.UseAuthentication();
 app.MapControllers();

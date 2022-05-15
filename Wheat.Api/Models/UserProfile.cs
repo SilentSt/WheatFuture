@@ -3,7 +3,7 @@
 using Wheat.Models.Entities;
 using Wheat.Models.Responses;
 
-namespace Wheat.Models
+namespace Wheat.Api.Models
 {
     public class UserProfile : Profile
     {

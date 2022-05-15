@@ -10,6 +10,14 @@ namespace Wheat.DataLayer.Repositories.Interfaces
     public interface IContractRepository
     {
         Task<ContractsResult> GetMyContractsAsync(string userId);
-        Task CreateContractsAsync(string userId, int count, decimal price);
+        Task<Contracts> GetMyBuyContracts(string userId);
+        Task<Contracts> GetMySellContracts(string userId);
+        Task CreateContractsAsync(string userId, int count, double price, bool? sell);
+        Task DealAsync(string userId, string code, int count, double price, bool? buy);
+        Task DealAsync(string userId, string bCode, string sCode, int count, double price);
+        Task ReSellContractsAsync(string userId, string code, int count, double price, double newPrice);
+        Task<BalanceResults> GetTotalBalanceAsync(string userId);
+        Task<List<ContractPrice>> GetPublicSellContracts();
+        Task<List<ContractPrice>> GetPublicBuyContracts();
     }
 }
